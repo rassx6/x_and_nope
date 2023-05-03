@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<title>Nope AND X</title>
+	<meta charset="utf-8">
+	<style>
+		#game {
+			width: 156px;
+			border: 1px solid #000;
+			margin: 0 auto;
+			font-size: 0;
+		}
+		.cell {
+			width: 50px;
+			height: 50px;
+			line-height: 50px;
+			text-align: center;
+			font-family: arial;
+			display: inline-block;
+			font-size: 26px;
+			border: 1px solid #000;
+			cursor: pointer;
+			vertical-align: middle;
+			transition: background .1s;
+		}
+		.cell:hover {
+			background: #eee;
+		}
+		#message {
+			text-align: center
+		}
+		#restart {
+			margin: 0 auto;
+			display: block;
+		}
+		#statistics {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			border: 1px solid;
+			padding: 0 20px;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div id="game">
+		<div class="cell" data-id="0"></div>
+		<div class="cell" data-id="1"></div>
+		<div class="cell" data-id="2"></div>
+		<div class="cell" data-id="3"></div>
+		<div class="cell" data-id="4"></div>
+		<div class="cell" data-id="5"></div>
+		<div class="cell" data-id="6"></div>
+		<div class="cell" data-id="7"></div>
+		<div class="cell" data-id="8"></div>
+	</div> 
+	<p id="message">
+		Ходит: x
+	</p>
+	<input type="button" id="restart" value="Начать сначала">
+	<div id="statistics">
+		<p>
+			Выиграл <b>x</b>: <span id="win_x">0</span>
+		</p>
+		<p>
+			Выиграл <b>0</b>: <span id="win_nope">0</span>
+		</p>
+		<p>
+			Ничья: <span id="win_draw">0</span>
+		</p>
+	</div>
+	<script>
+		let game = document.getElementById('game');
+        let message = document.getElementById('message');
+        let restart = document.getElementById('restart');
+        let win_x = document.getElementById('win_x');
+        let win_nope = document.getElementById('win_nope');
+        let win_draw = document.getElementById('win_draw');
+        let cells = document.getElementsByClassName('cell');
+        let data = []; //хранилище ячеек
+        win = {x: 0, '0': 0, draw: 0};
+        let stepCount = 0;
+        let winIndex = [
+			[0, 1, 2], 
+			[3, 4, 5], 
+			[6, 7, 8], 
+			[0, 3, 6], 
+			[1, 4, 7], 
+			[2, 5, 8], 
+			[0, 4, 8], 
+			[2, 4, 6]
+		];
+        let player = 'x';
+        let paused = false;
+        function chekWin() {
+            for (let i = 0; i < winIndex.length; i++)
+            let id = winIndex[i];
+            let check == data[id[0]] &&
+            data[id[1]] == data[id[2]];
+        }
+        restart.addEventListener('click', gameRestart);
+        function addEvent(cell) {
+            cell.addEventListener('click', step);
+            function step() {
+                if (!cell.innerHTML && !paused) {
+                    cell.innerHTML = player;
+                    let id = cell.getAttribute('data-id');
+                    data[id] = player;
+                    stepCount++;
+                    if (chekWin()) {
+                        message.innerHTML = 'Выиграл: ' + player;
+                        win [player]++;
+                        stepCount = 0;
+                        paused = true;
+                    } else {
+                        changePlayer();
+                    }
+                    if (stepCount >= 9) {
+                        win.draw++;
+                        stepCount = 0;
+                        message.innerHTML = 'Ничья';
+                    }
+                    updateStatistics();
+                }
+            }
+        }
+
+        for (let i = 0; i < cells.length; i++) {
+            addEvent(cell[i]);
+        }
+
+
+    </script>   
+</body>
+</html>
